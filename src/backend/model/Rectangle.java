@@ -27,7 +27,7 @@ public class Rectangle extends Figure {
 
 
     @Override
-    boolean pointBelongs(Point point) {
+    public boolean pointBelongs(Point point) {
         return point.getX() >= topLeft.getX() && point.getX() <= bottomRight.getX()
                 && point.getY() >= getTopLeft().getY() && point.getY() <= bottomRight.getY();
     }

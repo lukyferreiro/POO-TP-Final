@@ -4,9 +4,12 @@ import java.util.List;
 
 public abstract class Figure implements Movable {
 
-   abstract boolean pointBelongs(Point point);
+   public abstract boolean pointBelongs(Point point);
 
-   abstract List<Point> getPoints();
+   @Override
+   public abstract String toString();
+
+   protected abstract List<Point> getPoints();
 
    @Override
    public void move(double deltaX, double deltaY) {

@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	CanvasState canvasState;
+	private final CanvasState canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+
 	Color lineColor = Color.BLACK;
 	Color fillColor = Color.YELLOW;
 
