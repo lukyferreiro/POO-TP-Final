@@ -2,13 +2,23 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 
-// Interfaz para establecer los colores de un objeto
+// Interfaz para establecer los colores y el ancho
+// del borde de un objeto (en ese caso Figure)
 public interface Colorable {
 
-    Color getEdgeColor();   // Get color del borde
-    Color getFillColor();   // Get color de relleno
+    default void setColorProp(Color edgeColor, Color fillColor, double edgeWidth) {
+        setEdgeColor(edgeColor);    // Color del borde
+        setFillColor(fillColor);    // Color del relleno
+        setEdgeWidth(edgeWidth);    // Ancho del borde
+    }
 
-    void setEdgeColor(Color edgeColor);    // Set color borde
-    void setFillColor(Color fillColor);    // Set color relleno
+    void setEdgeColor(Color edgeColor);
+    void setFillColor(Color fillColor);
+    void setEdgeWidth(double edgeWidth);
+
+    Color getEdgeColor();
+    Color getFillColor();
+
+    double getEdgeWidth();
 
 }
