@@ -1,12 +1,10 @@
 # POO-TP-Final
 
-____________________________________________________________________
 
 Benjamin Delasoie 61231
 Lucas Agustin Ferreiro 61595
 Melisa Limachi
 
--------------------------------------------------------------------
 
 Funcionalidades agregadas:
 
