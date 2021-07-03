@@ -8,7 +8,7 @@ public enum FigureButton {
     RECTANGLE(new ToggleButton("Rectángulo")){
         @Override
         public Figure getFigure(Point startPoint, Point endPoint) {
-            return new Rectangle(startPoint,endPoint);
+            return new Rectangle(startPoint, endPoint);
         }
     },
     CIRCLE(new ToggleButton("Círculo")){
@@ -20,7 +20,7 @@ public enum FigureButton {
     SQUARE(new ToggleButton("Cuadrado")){
         @Override
         public Figure getFigure(Point startPoint, Point endPoint) {
-            return new Square(startPoint,endPoint);
+            return new Square(startPoint, endPoint);
         }
     },
     ELLIPSE(new ToggleButton("Elipse")){
@@ -38,6 +38,7 @@ public enum FigureButton {
             return new Line(startPoint, endPoint);
         }
     };
+
     private final ToggleButton button;
 
     FigureButton(ToggleButton button) {

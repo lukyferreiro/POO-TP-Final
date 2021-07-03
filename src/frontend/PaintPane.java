@@ -46,6 +46,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		List<ToggleButton> toolsList = new ArrayList<>();
+		toolsList.add(selectionButton);
 		toolsList.addAll(Arrays.stream(FigureButton.values()).map(FigureButton::getButton).collect(Collectors.toList()));
 
 		ToggleGroup tools = new ToggleGroup();
