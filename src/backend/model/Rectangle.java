@@ -14,13 +14,6 @@ public class Rectangle extends Figure {
         this.bottomRight = bottomRight;
     }
 
-    public Point getTopLeft() {
-        return topLeft;
-    }
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
 
     @Override
     public boolean isEnclosedBy(Point tl, Point br) {
@@ -43,12 +36,12 @@ public class Rectangle extends Figure {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(),
-                Math.abs(getTopLeft().getX() - getBottomRight().getX()),
-                Math.abs(getTopLeft().getY() - getBottomRight().getY()));
-        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(),
-                Math.abs(getTopLeft().getX() - getBottomRight().getX()),
-                Math.abs(getTopLeft().getY() - getBottomRight().getY()));
+        gc.fillRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
+        gc.strokeRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
     }
 
     @Override
