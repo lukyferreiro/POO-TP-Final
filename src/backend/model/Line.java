@@ -25,6 +25,12 @@ public class Line extends Figure{
     public void move(double moveInX, double moveInY) {
 
     }
+    
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.strokeLine(start.getX(), start.getY(),end.getX(), end.getY());
+    }
+
 
     @Override
     public String toString() {
