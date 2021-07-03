@@ -7,14 +7,14 @@ import java.util.List;
 
 public class CanvasState {
 
-    private final List<Figure> list = new ArrayList<>();
+    private final List<Figure> canvasFigure = new ArrayList<>();
 
     public void addFigure(Figure figure) {
-        list.add(figure);
+        canvasFigure.add(figure);
     }
 
     public Iterable<Figure> figures() {
-        return new ArrayList<>(list);
+        return new ArrayList<>(canvasFigure);
     }
 
 }

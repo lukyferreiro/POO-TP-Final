@@ -1,12 +1,22 @@
 package backend.model;
 
+import java.awt.*;
 import java.util.List;
 
 public abstract class Figure implements Movable {
 
    public abstract boolean pointBelongs(Point point);
 
-   @Override
+   public void setEdgeWidth(double newWidth){
+       this.edgeWidth = edgeWidth;
+   }
+
+    // Get ancho del borde
+    public double getEdgeWidth(){
+        return edgeWidth;
+    }
+
+    @Override
    public abstract String toString();
 
    protected abstract List<Point> getPoints();
@@ -17,6 +27,7 @@ public abstract class Figure implements Movable {
            point.move(deltaX, deltaY);
        }
    }
+
 
 }
 

@@ -156,6 +156,12 @@ public class PaintPane extends BorderPane {
 				gc.setStroke(lineColor);
 			}
 			gc.setFill(fillColor);
+			/*
+			 figura.draw(gc){
+			     gc.fillRect(...)
+			     gc.strokeRect(...)
+			 }
+			 */
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
 				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
