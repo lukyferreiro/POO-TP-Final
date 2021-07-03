@@ -12,7 +12,6 @@ public class Point implements Movable {
     public double getX() {
         return x;
     }
-
     public double getY() {
         return y;
     }
@@ -23,10 +22,9 @@ public class Point implements Movable {
         this.y += deltaY;
     }
 
-/*
     public double distanceTo(Point point) {
         return Math.sqrt(Math.pow(this.x - point.getX(), 2) + Math.pow(this.y - point.getY(), 2));
-    }    */
+    }
 
     @Override
     public String toString() {

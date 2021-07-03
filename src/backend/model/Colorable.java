@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 // del borde de un objeto (en ese caso Figure)
 public interface Colorable {
 
-
     void setEdgeColor(Color edgeColor);
     void setFillColor(Color fillColor);
 

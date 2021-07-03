@@ -21,35 +21,31 @@ public class Ellipse extends Figure{
         this.centerPoint = new Point(topLeft.getX() + xAxis/2 , topLeft.getY() + yAxis/2 );
     }
 
-    @Override
-    public String toString() {
-        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]",
-                centerPoint, xAxis, yAxis);
-    }
-
     public Point getCenterPoint() {
         return centerPoint;
     }
-    
     public double getxAxis() {
         return xAxis;
     }
     public double getyAxis() {
         return yAxis;
     }
-    
+    public void setBottomRight(Point bottomRight) {
+        this.bottomRight = bottomRight;
+    }
+    public void setCenterPoint(Point centerPoint) {
+        this.centerPoint = centerPoint;
+    }
+    public void setTopLeft(Point topLeft) {
+        this.topLeft = topLeft;
+    }
     public void setxAxis(double xAxis) {
         this.xAxis = xAxis;
     }
     public void setyAxis(double yAxis) {
         this.yAxis = yAxis;
     }
-    
-    @Override
-    public void draw(GraphicsContext gc) {
-        gc.fillOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
-        gc.strokeOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
-    }
+
 
     @Override
     public boolean isEnclosedBy(Point tl, Point br) {
@@ -75,5 +71,11 @@ public class Ellipse extends Figure{
     public void draw(GraphicsContext gc) {
         gc.fillOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
         gc.strokeOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]",
+                centerPoint, xAxis, yAxis);
     }
 }
