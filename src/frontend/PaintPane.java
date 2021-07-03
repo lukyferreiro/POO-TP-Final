@@ -31,14 +31,16 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
+	ToggleButton deleteButton = new ToggleButton("Borrar");
+	ToggleButton bringForwardButton = new ToggleButton("Al fondo");
+	ToggleButton sendBackButton = new ToggleButton("Al frente");
 
 	// Dibujar una figura
 	Point startPoint;
 
 	// Seleccionar una figura
 
-	Figure selectedFigure;
-	// List<Figure> selectedFigures;
+	List<Figure> selectedFigures;
 
 	// StatusBar
 	StatusPane statusPane;
@@ -49,6 +51,9 @@ public class PaintPane extends BorderPane {
 		List<ToggleButton> toolsList = new ArrayList<>();
 		toolsList.add(selectionButton);
 		toolsList.addAll(Arrays.stream(FigureButton.values()).map(FigureButton::getButton).collect(Collectors.toList()));
+		toolsList.add(deleteButton);
+		toolsList.add(bringForwardButton);
+		toolsList.add(sendBackButton);
 
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsList) {
@@ -72,17 +77,16 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) {
 				return;
 			}
-
-			Figure newFigure = FigureButton.findButton(startPoint, endPoint);
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
+			Figure newFigure = FigureButton.findButton(startPoint, endPoint);
+
 			if(newFigure == null){
 				throw new IllegalArgumentException("Figura mal creada");
 			}
 			canvasState.addFigure(newFigure);
-			startPoint = null;
-			//redrawCanvas();
+			redrawCanvas();
 		});
 		// Informacion relevante de la figura
 		canvas.setOnMouseMoved(event -> {
@@ -106,41 +110,34 @@ public class PaintPane extends BorderPane {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState.figures()) {
-					// if(figure.Belongs(eventPoint)
-					if(figureBelongs(figure, eventPoint)) {
-						found = true;
-						selectedFigure = figure;
-						label.append(figure.toString());
+				StringBuilder label = new StringBuilder();
+				if(!selectedFigures.isEmpty()) {
+					for (Figure figure : canvasState.figures()) {
+						if (figure.pointBelongs(eventPoint)) {
+							found = true;
+							selectedFigures.add(figure);
+							label.append("Se seleccionó: " + figure.toString());
+						}
 					}
+					if (found) {
+						statusPane.updateStatus(label.toString());
+					}
+					redrawCanvas();
 				}
-				if (found) {
-					statusPane.updateStatus(label.toString());
-				} else {
-					selectedFigure = null;
-					statusPane.updateStatus("Ninguna figura encontrada");
-				}
-				//redrawCanvas();
 			}
-		});
+		})
+		// TODO mover multiples figuras
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				if(selectedFigure instanceof Rectangle) {
-					Rectangle rectangle = (Rectangle) selectedFigure;
-					rectangle.getTopLeft().x += diffX;
-					rectangle.getBottomRight().x += diffX;
-					rectangle.getTopLeft().y += diffY;
-					rectangle.getBottomRight().y += diffY;
-				} else if(selectedFigure instanceof Ellipse) {
-					Ellipse ellipse = (Ellipse) selectedFigure;
-					ellipse.getCenterPoint().x += diffX;
-					ellipse.getCenterPoint().y += diffY;
+				if(!selectedFigures.isEmpty()) {
+					for (Figure figure : canvasState.figures()){//selectedFigures
+						figure.move(diffX, diffY);
+						redrawCanvas();
+					}
 				}
-				redrawCanvas();
 			}
 		});
 		setLeft(buttonsBox);
