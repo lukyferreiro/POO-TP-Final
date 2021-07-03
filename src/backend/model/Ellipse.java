@@ -27,6 +27,26 @@ public class Ellipse extends Figure{
     public Point getCenterPoint() {
         return centerPoint;
     }
+    
+    public double getxAxis() {
+        return xAxis;
+    }
+    public double getyAxis() {
+        return yAxis;
+    }
+    
+    public void setxAxis(double xAxis) {
+        this.xAxis = xAxis;
+    }
+    public void setyAxis(double yAxis) {
+        this.yAxis = yAxis;
+    }
+    
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.fillOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
+        gc.strokeOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
+    }
 
     @Override
     public boolean pointBelongs(Point point) {
