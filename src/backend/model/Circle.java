@@ -6,7 +6,8 @@ public class Circle extends Ellipse {
 
     public Circle(Point topLeft, Point bottomRight){
         super(topLeft, bottomRight);
-        this.radius = xAxis;
+        this.radius = getxAxis();
+        setyAxis(radius);
     }
 
     @Override

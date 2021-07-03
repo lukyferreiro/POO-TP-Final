@@ -1,11 +1,15 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class Rectangle extends Figure {
 
-    protected final Point topLeft, bottomRight;
+    protected final Point topLeft;
+    protected final Point bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
@@ -15,7 +19,6 @@ public class Rectangle extends Figure {
     public Point getTopLeft() {
         return topLeft;
     }
-
     public Point getBottomRight() {
         return bottomRight;
     }
@@ -24,7 +27,6 @@ public class Rectangle extends Figure {
     public String toString() {
         return String.format("Rectangulo [ %s , %s ]", topLeft, bottomRight);
     }
-
 
     @Override
     public boolean pointBelongs(Point point) {
@@ -38,5 +40,20 @@ public class Rectangle extends Figure {
         toReturn.add(topLeft);
         toReturn.add(bottomRight);
         return toReturn;
+    }
+
+    @Override
+    public boolean isEnclosedBy(Point tl, Point br){
+        return pointBelongs(tl) && pointBelongs((br));
+    }
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.fillRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
+        gc.strokeRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
     }
 }

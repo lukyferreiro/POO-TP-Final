@@ -1,5 +1,8 @@
 package backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,11 @@ public class Ellipse extends Figure{
     }
 
     @Override
+    public boolean isEnclosedBy(Point tl, Point br) {
+        return false;
+    }
+
+    @Override
     public boolean pointBelongs(Point point) {
         double h = centerPoint.getX();
         double k = centerPoint.getY();
@@ -40,5 +48,12 @@ public class Ellipse extends Figure{
         List<Point> toReturn = new ArrayList<>();
         toReturn.add(centerPoint);
         return toReturn;
+    }
+
+
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.fillOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
+        gc.strokeOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
     }
 }
