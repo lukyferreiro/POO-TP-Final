@@ -16,8 +16,8 @@ public class Ellipse extends Figure{
     public Ellipse(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
-        this.xAxis = (bottomRight.getX() - topLeft.getX()) / 2;
-        this.yAxis = (topLeft.getY() - bottomRight.getY()) / 2;
+        this.xAxis = Math.abs(bottomRight.getX() - topLeft.getX());
+        this.yAxis = Math.abs(topLeft.getY() - bottomRight.getY());
         this.centerPoint = new Point(topLeft.getX() + xAxis/2 , topLeft.getY() + yAxis/2 );
     }
 
@@ -30,15 +30,7 @@ public class Ellipse extends Figure{
     public double getyAxis() {
         return yAxis;
     }
-    public void setBottomRight(Point bottomRight) {
-        this.bottomRight = bottomRight;
-    }
-    public void setCenterPoint(Point centerPoint) {
-        this.centerPoint = centerPoint;
-    }
-    public void setTopLeft(Point topLeft) {
-        this.topLeft = topLeft;
-    }
+
     public void setxAxis(double xAxis) {
         this.xAxis = xAxis;
     }
@@ -49,7 +41,8 @@ public class Ellipse extends Figure{
 
     @Override
     public boolean isEnclosedBy(Point tl, Point br) {
-        return false;
+        Rectangle rect = new Rectangle(tl, br);
+        return rect.pointBelongs(topLeft) && rect.pointBelongs(bottomRight);
     }
 
     @Override
@@ -79,3 +72,4 @@ public class Ellipse extends Figure{
                 centerPoint, xAxis, yAxis);
     }
 }
+
