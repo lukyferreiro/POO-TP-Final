@@ -19,12 +19,22 @@ public class Rectangle extends Figure {
     public Point getBottomRight() {
         return bottomRight;
     }
+    
 
     @Override
     public String toString() {
         return String.format("Rectangulo [ %s , %s ]", topLeft, bottomRight);
     }
 
+    @Override
+    public void draw(GraphicsContext gc) {
+        gc.fillRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
+        gc.strokeRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+    
+    }
 
     @Override
     public boolean pointBelongs(Point point) {
