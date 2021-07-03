@@ -9,20 +9,6 @@ public abstract class Figure implements Movable, Drawable, Colorable {
     private Color edgeColor = Color.BLACK;
     private Color fillColor = Color.YELLOW;
 
-    public double getEdgeWidth() {
-        return edgeWidth;
-    }
-    public void setEdgeWidth(double edgeWidth) {
-        this.edgeWidth = edgeWidth;
-    }
-
-    @Override
-    public void move(double deltaX, double deltaY) {
-        for(Point point : this.getPoints()) {
-            point.move(deltaX, deltaY);
-        }
-    }
-    
     @Override
     public void setEdgeColor(Color edgeColor) {
         this.edgeColor = edgeColor;
@@ -38,6 +24,20 @@ public abstract class Figure implements Movable, Drawable, Colorable {
     @Override
     public Color getFillColor() {
         return fillColor;
+    }
+
+    public double getEdgeWidth() {
+        return edgeWidth;
+    }
+    public void setEdgeWidth(double edgeWidth) {
+        this.edgeWidth = edgeWidth;
+    }
+
+    @Override
+    public void move(double deltaX, double deltaY) {
+        for(Point point : this.getPoints()) {
+            point.move(deltaX, deltaY);
+        }
     }
 
     // Metodo para determinar si la figura completa se encuentra dentro
