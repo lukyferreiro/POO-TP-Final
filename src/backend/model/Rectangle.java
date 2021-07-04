@@ -21,16 +21,16 @@ public class Rectangle extends Figure {
         return bottomRight;
     }
 
-
     @Override
     public boolean isEnclosedBy(Point tl, Point br) {
-        return false;
+        Rectangle rect = new Rectangle(tl, br);
+        return rect.pointBelongs(topLeft) && rect.pointBelongs(bottomRight);
     }
 
     @Override
     public boolean pointBelongs(Point point) {
         return point.getX() >= topLeft.getX() && point.getX() <= bottomRight.getX()
-                && point.getY() >= getTopLeft().getY() && point.getY() <= bottomRight.getY();
+                && point.getY() >= topLeft.getY() && point.getY() <= bottomRight.getY();
     }
 
     @Override
@@ -43,12 +43,11 @@ public class Rectangle extends Figure {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(),
-                Math.abs(getTopLeft().getX() - getBottomRight().getX()),
-                Math.abs(getTopLeft().getY() - getBottomRight().getY()));
-        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(),
-                Math.abs(getTopLeft().getX() - getBottomRight().getX()),
-                Math.abs(getTopLeft().getY() - getBottomRight().getY()));
+        gc.fillRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+
+        gc.strokeRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
     }
 
     @Override

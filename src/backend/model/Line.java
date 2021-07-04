@@ -22,10 +22,9 @@ public class Line extends Figure{
         return end;
     }
 
-
     @Override
     public boolean pointBelongs(Point point) {
-        return true;
+        return false;
     }
 
     @Override
@@ -33,14 +32,10 @@ public class Line extends Figure{
         return Arrays.asList(getStart(), getEnd());
     }
 
-//    @Override
-//    public void move(double moveInX, double moveInY) {
-//
-//    }
-
     @Override
     public boolean isEnclosedBy(Point tl, Point br) {
-        return pointBelongs(tl) && pointBelongs(br);
+        Rectangle rect = new Rectangle(tl, br);
+        return rect.pointBelongs(start) && rect.pointBelongs(end);
     }
 
     @Override

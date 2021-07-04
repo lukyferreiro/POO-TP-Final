@@ -10,13 +10,18 @@ public class Circle extends Ellipse {
         setyAxis(radius);
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
     @Override
     public String toString() {
         return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, radius);
     }
 
-    public double getRadius() {
-        return radius;
+    @Override
+    public boolean pointBelongs(Point p){
+        return true;
     }
 
 }
