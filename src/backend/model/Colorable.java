@@ -2,8 +2,7 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 
-// Interfaz para establecer los colores y el ancho
-// del borde de un objeto (en ese caso Figure)
+// Interfaz para establecer los colores de un objeto (en este caso Figure)
 public interface Colorable {
 
     void setEdgeColor(Color edgeColor);
