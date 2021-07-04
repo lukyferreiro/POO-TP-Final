@@ -142,24 +142,39 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		// TODO que recorra y
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				StringBuilder label = new StringBuilder();
-				for (Figure figure : canvasState.figures()) {
-					if (figure.pointBelongs(eventPoint) && selectedFigures.isEmpty()) {
-						selectedFigures.add(figure);
-						label.append("Se seleccionó: " + figure.toString());
+				selectedFigures.clear();
+				//click en un punto sobre una figura
+				if(startPoint.compareTo(eventPoint) == 0) {
+					for(Figure figure : canvasState.figures()) {
+						if (figure.pointBelongs(eventPoint)) {
+							selectedFigures.add(figure);
+						}
 					}
 				}
+				//hago un rectangulo imaginario
+				else{
+					for (Figure figure : canvasState.figures()) {
+						if(figure.isEnclosedBy(startPoint, eventPoint)) {
+							selectedFigures.add(figure);
+						}
+					}
+				}
+
+				StringBuilder label = new StringBuilder();
+				label.append("Se selecciono: ");
+
 				if (!selectedFigures.isEmpty()) {
+					for(Figure figure : selectedFigures){
+						label.append(figure.toString());
+					}
 					statusPane.updateStatus(label.toString());
 				}
 				redrawCanvas();
-			selectedFigures.clear();
+				selectedFigures.clear();
 			}
-		});
 
 		// TODO mover multiples figuras
 		canvas.setOnMouseDragged(event -> {
