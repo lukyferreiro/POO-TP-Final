@@ -23,5 +23,4 @@ public class Circle extends Ellipse {
     public boolean pointBelongs(Point p){
         return true;
     }
-
 }

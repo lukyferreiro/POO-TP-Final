@@ -1,6 +1,7 @@
 package backend.model;
 
 public class Square extends Rectangle {
+
     private final double side;
 
     public Square(Point topLeft, Point bottomRight) {

@@ -9,6 +9,7 @@ public class Line extends Figure{
 
     private final Point start;
     private final Point end;
+    private static final int ERROR = 10;
 
     public Line(Point start, Point end){
         this.start = start;
@@ -24,6 +25,16 @@ public class Line extends Figure{
 
     @Override
     public boolean pointBelongs(Point point) {
+        if(Double.compare (start.getX(), end.getX()) == 0){
+            return ((point.getY() < start.getY() && point.getY() > end.getY()) ||
+                    (point.getY() > start.getY() && point.getY() < end.getY()) &&
+                            Double.compare(point.getX(), start.getX()) == 0);
+        }
+        if((point.getX() < start.getX() && point.getX() > end.getX()) ||
+                (point.getX() > start.getX() && point.getX() < end.getX()) ){
+            double aux = (start.getY() - end.getY()) / (start.getX() - end.getX());
+            return Math.abs(point.getY() - aux * point.getX() - start.getY() - aux * start.getX()) < ERROR;
+        }
         return false;
     }
 
