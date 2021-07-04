@@ -45,6 +45,16 @@ public abstract class Figure implements Movable, Drawable, Colorable {
         }
     }
 
+
+    protected void checkTopLeftBottomRight(Point topLeft, Point bottomRight) {
+        if(topLeft == null || bottomRight == null) {
+            throw new NullPointerException("Puntos inválidos");
+        }
+        if(bottomRight.getX() < topLeft.getX() || bottomRight.getY() < topLeft.getY()) {
+            throw new IllegalArgumentException("Formación de figura inválida");
+        }
+    }
+
     public abstract void draw(GraphicsContext gc);
 
     // Metodo para determinar si la figura completa se encuentra dentro del rectangulo imaginario de seleccion multiple

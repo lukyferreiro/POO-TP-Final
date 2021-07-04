@@ -41,10 +41,6 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton sendFrontButton = new ToggleButton("Al fondo");
 	private final ToggleButton sendBackButton = new ToggleButton("Al frente");
 
-	//Labels
-	Label edgeLabel = new Label("Borde");
-	Label fillLabel = new Label("Relleno");
-
 	//Border slider
 	private final Slider slider = new Slider(1, 30, 1);
 
@@ -52,11 +48,15 @@ public class PaintPane extends BorderPane {
 	private final ColorPicker edgeColorPicker = new ColorPicker(edgeColor);
 	private final ColorPicker fillColorPicker = new ColorPicker(fillColor);
 
+	//Labels
+	Label edgeLabel = new Label("Borde");
+	Label fillLabel = new Label("Relleno");
+
 	// Dibujar una figura
 	private Point startPoint;
 
 	// Seleccionar una figura
-	private List<Figure> selectedFigures = new ArrayList<>();
+	private final List<Figure> selectedFigures = new LinkedList<>();
 
 	// StatusBar
 	private final StatusPane statusPane;
@@ -196,7 +196,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		//Elimina las figuras seleccionadas
+		//Elimina todas las figuras seleccionadas
 		deleteButton.setOnAction(event -> {
 			canvasState.removeFigures(selectedFigures);
 			selectedFigures.clear();
