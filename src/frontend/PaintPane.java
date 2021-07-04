@@ -26,7 +26,7 @@ public class PaintPane extends BorderPane {
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-	Color lineColor = Color.BLACK;
+	Color edgeColor = Color.BLACK;
 	Color fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
@@ -34,6 +34,16 @@ public class PaintPane extends BorderPane {
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	ToggleButton sendFrontButton = new ToggleButton("Al fondo");
 	ToggleButton sendBackButton = new ToggleButton("Al frente");
+	//Labels
+	Label edgeLabel=new Label("Borde");
+	Label fillLabel=new Label("Relleno");
+
+	//Border slider
+	Slider slider = new Slider(1, 30, 1);
+
+	//Color Picker
+	ColorPicker edgeColorPicker = new ColorPicker(edgeColor);
+	ColorPicker fillColorPicker = new ColorPicker(fillColor);
 
 	// Dibujar una figura
 	Point startPoint;
@@ -64,7 +74,17 @@ public class PaintPane extends BorderPane {
 
 		VBox buttonsBox = new VBox(10);
 		
+		//Agrego los botones de la izquierda
 		buttonsBox.getChildren().addAll(toolsList);
+		//Permito que se vea donde esta posicionado
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		//agrego los labels, slider y colorPick
+		buttonsBox.getChildren().add(edgeLabel);
+		buttonsBox.getChildren().add(slider);
+		buttonsBox.getChildren().add(edgeColorPicker);
+		buttonsBox.getChildren().add(fillLabel);
+		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
@@ -156,6 +176,36 @@ public class PaintPane extends BorderPane {
 			selectedFigures.clear();
 			deleteButton.setSelected(false);
 			redrawCanvas();
+		});
+		//Se cambia el borde de las figuras
+		slider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (Figure figure : selectedFigures) {
+					figure.setEdgeWidth(slider.getValue());
+					redrawCanvas();
+				}
+			}
+		});
+		//Cambia el color del borde
+		edgeColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+				for(Figure figure: selectedFigures){
+					figure.setEdgeColor(newValue);
+					redrawCanvas();
+				}
+			}
+		});
+		//Cambia el color del relleno
+		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+				for(Figure figure : selectedFigures){
+					figure.setFillColor(newValue);
+					redrawCanvas();
+				}
+			}
 		});
 		
 		setLeft(buttonsBox);
