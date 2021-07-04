@@ -11,7 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +39,7 @@ public class PaintPane extends BorderPane {
 	Point startPoint;
 
 	// Seleccionar una figura
-	List<Figure> selectedFigures;
+	List<Figure> selectedFigures = new ArrayList<>();	
 
 	// StatusBar
 	StatusPane statusPane;
@@ -63,7 +63,7 @@ public class PaintPane extends BorderPane {
 		}
 
 		VBox buttonsBox = new VBox(10);
-
+		
 		buttonsBox.getChildren().addAll(toolsList);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
@@ -96,6 +96,7 @@ public class PaintPane extends BorderPane {
 				}
 			}
 			redrawCanvas();
+			selectedFigures.clear();
 		});
 
 		// Informacion relevante de la figura
@@ -131,7 +132,7 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus(label.toString());
 				}
 				redrawCanvas();
-
+			selectedFigures.clear();
 			}
 		});
 
@@ -149,29 +150,30 @@ public class PaintPane extends BorderPane {
 				}
 			}
 		});
-		// TODO no lo probamos
+		// TODO no lo probamos 
 		deleteButton.setOnAction(event -> {
 			canvasState.removeFigures(selectedFigures);
 			selectedFigures.clear();
 			deleteButton.setSelected(false);
 			redrawCanvas();
 		});
-
+		
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
 
-	// TODO algo anda mal. Se crea en canvasState pero no sale al frontend
+		// TODO algo anda mal. Se crea en canvasState pero no sale al frontend
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
-			if (selectedFigures.contains(figure)) {
+			if (!selectedFigures.isEmpty()) {
+				if (selectedFigures.contains(figure))
 				figure.setEdgeColor(Color.RED);
 			}
 			gc.setFill(figure.getFillColor());
 			gc.setStroke(figure.getEdgeColor());
 			gc.setLineWidth(figure.getEdgeWidth());
-//			figure.draw(gc);
+			figure.draw(gc);
 
 		}
 	}
