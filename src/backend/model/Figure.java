@@ -50,7 +50,7 @@ public abstract class Figure implements Movable, Drawable, Colorable {
         if(topLeft == null || bottomRight == null) {
             throw new NullPointerException("Puntos inválidos");
         }
-        if(bottomRight.getX() < topLeft.getX() || bottomRight.getY() < topLeft.getY()) {
+        if(bottomRight.getX() < topLeft.getX() || bottomRight.getY() > topLeft.getY()) {
             throw new IllegalArgumentException("Formación de figura inválida");
         }
     }
