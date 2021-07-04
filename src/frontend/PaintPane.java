@@ -97,23 +97,23 @@ public class PaintPane extends BorderPane {
 
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return;
-			}
 			StringBuilder label = new StringBuilder();
-			Figure newFigure = FigureButton.findButton(startPoint, endPoint);
-
-			if(newFigure != null) {
-				canvasState.addFigure(newFigure);
-			}
-			if(selectionButton.isSelected()) {
-				for (Figure figure : canvasState.figures()) {
-					if (figure.isEnclosedBy(startPoint, endPoint)) {
-						selectedFigures.add(figure);
-						label.append(figure.toString());
-						statusPane.updateStatus(label.toString());
+			try {
+				Figure newFigure = FigureButton.findButton(startPoint, endPoint);
+				if(newFigure != null) {
+					canvasState.addFigure(newFigure);
+				}
+				if(selectionButton.isSelected()) {
+					for (Figure figure : canvasState.figures()) {
+						if (figure.isEnclosedBy(startPoint, endPoint)) {
+							selectedFigures.add(figure);
+							label.append(figure.toString());
+							statusPane.updateStatus(label.toString());
+						}
 					}
 				}
+			} catch(IllegalArgumentException ex) {
+
 			}
 			redrawCanvas();
 			selectedFigures.clear();
