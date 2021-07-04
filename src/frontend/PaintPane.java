@@ -11,7 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ public class PaintPane extends BorderPane {
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-	Color lineColor = Color.BLACK;
+	Color edgeColor = Color.BLACK;
 	Color fillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
@@ -34,12 +34,22 @@ public class PaintPane extends BorderPane {
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	ToggleButton sendFrontButton = new ToggleButton("Al fondo");
 	ToggleButton sendBackButton = new ToggleButton("Al frente");
+	//Labels
+	Label edgeLabel=new Label("Borde");
+	Label fillLabel=new Label("Relleno");
+
+	//Border slider
+	Slider slider = new Slider(1, 30, 1);
+
+	//Color Picker
+	ColorPicker edgeColorPicker = new ColorPicker(edgeColor);
+	ColorPicker fillColorPicker = new ColorPicker(fillColor);
 
 	// Dibujar una figura
 	Point startPoint;
 
 	// Seleccionar una figura
-	List<Figure> selectedFigures;
+	List<Figure> selectedFigures = new ArrayList<>();	
 
 	// StatusBar
 	StatusPane statusPane;
@@ -63,8 +73,18 @@ public class PaintPane extends BorderPane {
 		}
 
 		VBox buttonsBox = new VBox(10);
-
+		
+		//Agrego los botones de la izquierda
 		buttonsBox.getChildren().addAll(toolsList);
+		//Permito que se vea donde esta posicionado
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		//agrego los labels, slider y colorPick
+		buttonsBox.getChildren().add(edgeLabel);
+		buttonsBox.getChildren().add(slider);
+		buttonsBox.getChildren().add(edgeColorPicker);
+		buttonsBox.getChildren().add(fillLabel);
+		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
@@ -77,25 +97,26 @@ public class PaintPane extends BorderPane {
 
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return;
-			}
 			StringBuilder label = new StringBuilder();
-			Figure newFigure = FigureButton.findButton(startPoint, endPoint);
-
-			if(newFigure != null) {
-				canvasState.addFigure(newFigure);
-			}
-			if(selectionButton.isSelected()) {
-				for (Figure figure : canvasState.figures()) {
-					if (figure.isEnclosedBy(startPoint, endPoint)) {
-						selectedFigures.add(figure);
-						label.append(figure.toString());
-						statusPane.updateStatus(label.toString());
+			try {
+				Figure newFigure = FigureButton.findButton(startPoint, endPoint);
+				if(newFigure != null) {
+					canvasState.addFigure(newFigure);
+				}
+				if(selectionButton.isSelected()) {
+					for (Figure figure : canvasState.figures()) {
+						if (figure.isEnclosedBy(startPoint, endPoint)) {
+							selectedFigures.add(figure);
+							label.append(figure.toString());
+							statusPane.updateStatus(label.toString());
+						}
 					}
 				}
+			} catch(IllegalArgumentException ex) {
+
 			}
 			redrawCanvas();
+			selectedFigures.clear();
 		});
 
 		// Informacion relevante de la figura
@@ -131,7 +152,7 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus(label.toString());
 				}
 				redrawCanvas();
-
+			selectedFigures.clear();
 			}
 		});
 
@@ -149,29 +170,60 @@ public class PaintPane extends BorderPane {
 				}
 			}
 		});
-		// TODO no lo probamos
+		// TODO no lo probamos 
 		deleteButton.setOnAction(event -> {
 			canvasState.removeFigures(selectedFigures);
 			selectedFigures.clear();
 			deleteButton.setSelected(false);
 			redrawCanvas();
 		});
-
+		//Se cambia el borde de las figuras
+		slider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (Figure figure : selectedFigures) {
+					figure.setEdgeWidth(slider.getValue());
+					redrawCanvas();
+				}
+			}
+		});
+		//Cambia el color del borde
+		edgeColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+				for(Figure figure: selectedFigures){
+					figure.setEdgeColor(newValue);
+					redrawCanvas();
+				}
+			}
+		});
+		//Cambia el color del relleno
+		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+				for(Figure figure : selectedFigures){
+					figure.setFillColor(newValue);
+					redrawCanvas();
+				}
+			}
+		});
+		
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
 
-	// TODO algo anda mal. Se crea en canvasState pero no sale al frontend
+		// TODO algo anda mal. Se crea en canvasState pero no sale al frontend
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
-			if (selectedFigures.contains(figure)) {
+			if (!selectedFigures.isEmpty()) {
+				if (selectedFigures.contains(figure))
 				figure.setEdgeColor(Color.RED);
 			}
 			gc.setFill(figure.getFillColor());
 			gc.setStroke(figure.getEdgeColor());
 			gc.setLineWidth(figure.getEdgeWidth());
-//			figure.draw(gc);
+			figure.draw(gc);
 
 		}
 	}
