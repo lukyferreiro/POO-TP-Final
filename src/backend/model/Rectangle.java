@@ -17,6 +17,7 @@ public class Rectangle extends Figure {
     public Point getTopLeft() {
         return topLeft;
     }
+
     public Point getBottomRight() {
         return bottomRight;
     }
