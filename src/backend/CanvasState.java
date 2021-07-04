@@ -2,8 +2,6 @@ package backend;
 
 import backend.model.Figure;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,9 +36,5 @@ public class CanvasState {
     public void moveBackwards(Collection<Figure> selectedFigures) {
         removeFigures(selectedFigures);
         selectedFigures.forEach(canvasFigures::addLast);
-    }
-
-    public List<Figure> getFigures() {
-        return canvasFigures;
     }
 }
