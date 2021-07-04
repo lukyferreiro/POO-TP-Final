@@ -110,6 +110,9 @@ public class PaintPane extends BorderPane {
 			try {
 				Figure newFigure = FigureButton.findButton(startPoint, endPoint);
 				if(newFigure != null) {
+					newFigure.setEdgeWidth(slider.getValue());
+					newFigure.setFillColor(fillColorPicker.getValue());
+					newFigure.setEdgeColor(edgeColorPicker.getValue());
 					canvasState.addFigure(newFigure);
 				}
 				if(selectionButton.isSelected()) {
