@@ -2,12 +2,16 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 import java.util.List;
+import javafx.scene.canvas.GraphicsContext;
 
 public abstract class Figure implements Movable, Drawable, Colorable {
+    private static final double DEFAULT_EDGE_WIDTH = 1;
+    private static final Color DEFAULT_EDGE_COLOR = Color.BLACK;
+    private static final Color DEFAULT_FILL_COLOR = Color.YELLOW;
 
-    private double edgeWidth = 1;
-    private Color edgeColor = Color.BLACK;
-    private Color fillColor = Color.YELLOW;
+    private double edgeWidth = DEFAULT_EDGE_WIDTH;
+    private Color edgeColor = DEFAULT_EDGE_COLOR;
+    private Color fillColor = DEFAULT_FILL_COLOR;
 
     @Override
     public void setEdgeColor(Color edgeColor) {
@@ -40,10 +44,9 @@ public abstract class Figure implements Movable, Drawable, Colorable {
         }
     }
 
-    // Metodo para determinar si la figura completa se encuentra dentro
-    // del rectangulo imaginario de seleccion multiple
+    public abstract void draw(GraphicsContext gc);
 
-    //public abstract boolean inEnclosedBy(Rectangle rectangle);
+    // Metodo para determinar si la figura completa se encuentra dentro del rectangulo imaginario de seleccion multiple
     public abstract boolean isEnclosedBy(Point tl, Point br);
 
     // Metodo para determinar si un punto pertenece a la figura
