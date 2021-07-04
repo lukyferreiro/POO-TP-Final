@@ -44,6 +44,11 @@ public abstract class Figure implements Movable, Drawable, Colorable {
             point.move(deltaX, deltaY);
         }
     }
+    
+    protected void checkTopLeftBottomRight(Point startPoint, Point endPoint) {
+        if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())
+            throw new IllegalArgumentException("Los puntos den ser topleft y bottomright");
+    }
 
     public abstract void draw(GraphicsContext gc);
 
