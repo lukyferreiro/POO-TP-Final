@@ -9,9 +9,10 @@ public class Rectangle extends Figure {
 
     protected final Point topLeft, bottomRight;
 
-    public Rectangle(Point topLeft, Point bottomRight) {
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
+    public Rectangle(Point startPoint, Point endPoint) {
+        checkTopLeftBottomRight(startPoint, endPoint);
+        this.topLeft = startPoint;
+        this.bottomRight = endPoint;
     }
 
     public Point getTopLeft() {
