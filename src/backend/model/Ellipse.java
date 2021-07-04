@@ -13,9 +13,10 @@ public class Ellipse extends Figure{
     protected Point topLeft;
     protected Point bottomRight;
 
-    public Ellipse(Point topLeft, Point bottomRight) {
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
+    public Ellipse(Point startPoint, Point endPoint) {
+        checkTopLeftBottomRight(startPoint, endPoint);
+        this.topLeft = startPoint;
+        this.bottomRight = endPoint;
         this.xAxis = Math.abs(bottomRight.getX() - topLeft.getX());
         this.yAxis = Math.abs(topLeft.getY() - bottomRight.getY());
         this.centerPoint = new Point(topLeft.getX() + xAxis/2 , topLeft.getY() + yAxis/2 );

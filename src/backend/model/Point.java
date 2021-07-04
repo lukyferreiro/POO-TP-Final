@@ -2,7 +2,7 @@ package backend.model;
 
 import java.util.Objects;
 
-public class Point implements Movable {
+public class Point implements Movable, Comparable<Point> {
 
     public double x, y;
 
@@ -34,20 +34,13 @@ public class Point implements Movable {
         return String.format("{%.2f , %.2f}", x, y);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o){
-            return true;
-        }
-        if ( !(o instanceof Point) ){    //  if (o == null || getClass() != o.getClass()){
-            return false;
-        }
-        Point point = (Point) o;
-        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
-    }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
+    public int compareTo(Point o) {
+        int ans= Double.compare(x, o.getX());
+        if(ans == 0)
+           ans= Double.compare(y, o.getY());
+        return ans;
     }
+
 }

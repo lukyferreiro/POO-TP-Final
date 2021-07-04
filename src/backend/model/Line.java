@@ -51,7 +51,7 @@ public class Line extends Figure{
 
     @Override
     public String toString() {
-        return String.format("Linea [%.2f , %.2f]", start, end);
+        return String.format("Linea [%s , %s]", start, end);
     }
 
     @Override
