@@ -23,11 +23,13 @@ public abstract class Figure implements Movable, Colorable, Drawable{
 
     protected abstract List<Point> getPoints();
 
-    public double getEdgeWidth() {
-        return edgeWidth;
-    }
-    public void setEdgeWidth(double edgeWidth) {
-        this.edgeWidth = edgeWidth;
+    public void checkPoints(Point topLeft, Point bottomRight){
+        if(topLeft == null || bottomRight == null) {
+            throw new NullPointerException("Puntos nulos");
+        }
+        if((bottomRight.getX() <= topLeft.getX()) || bottomRight.getY() <= topLeft.getY()) {
+            throw new IllegalArgumentException("No se pudo crear la figura");
+        }
     }
 
     public double getEdgeWidth() {
@@ -65,5 +67,4 @@ public abstract class Figure implements Movable, Colorable, Drawable{
 
     @Override
     public abstract String toString();
-
 }
