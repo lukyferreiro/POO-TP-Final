@@ -160,10 +160,11 @@ public class PaintPane extends BorderPane {
 				}
 				//Si estamos aca es que fue seleccion simple, solamente se hizo click
 				else {
-					for(Figure figure : canvasState) {
-						if(figure.pointBelongs(eventPoint)  ) {
-						//	selectedFigures.clear();
-							selectedFigures.add(figure);
+					Iterator<Figure> it = canvasState.descendingIterator();
+					while(it.hasNext() && selectedFigures.isEmpty()) {
+						Figure fig = it.next();
+						if(fig.pointBelongs(eventPoint)) {
+							selectedFigures.add(fig);
 						}
 					}
 				}
