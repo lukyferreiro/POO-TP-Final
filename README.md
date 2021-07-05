@@ -33,7 +33,16 @@ Modificaciones realizadas al proyecto original:
 
 Problemas encontrados durante el desarrollo:
 
+-Los problemas encontrados mas importantes fueron aquellos relacionados con javaFX y el frontend; se requirio investigar la implementacion de la gran mayoria de los metodos y clases utilizados.
 
 -------------------------------------------------------------------
 
 Cambios hechos en la implementación provista por la Cátedra:
+
+-El metodo figureBelongs en la clase PaintPane no corresponde con el paradigma POO. Lo correcto seria contar con un metodo "pointBelongs" en la clase Figure que retorne verdadero si el Point recibido como parametro pertenece a la figura.
+
+-De la misma forma, en el metodo "redrawCanvas" no corresponde preguntar si la figura es instancia de Rectangle, de Elipse o de otra figura para poder dibujarse. Para corregir esto se creo la interfaz funcional Drawable con el metodo "draw", el cual es sobrescrito por cada figura, con el objetivo de que cada una sepa como dibujarse.
+
+-Analogamente a este ultimo, en el evento setOnMouseDragged, se pregunta de que instancia es la figura para poder moverla. Para mejorara esto se creo la interfaz funcional Movable con el metodo "move", el cual es sobrescrito por cada figura, con el objetivo de que cada una sepa cuales son sus requerimientos para moverse.
+
+-Se modifico el comportamiento de la clase CanvasState para que extienda de LinkedList y aprovechar algunos metodos.
