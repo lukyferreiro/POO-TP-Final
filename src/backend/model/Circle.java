@@ -6,8 +6,10 @@ public class Circle extends Ellipse {
 
     public Circle(Point topLeft, Point bottomRight){
         super(topLeft, bottomRight);
-        this.radius = getxAxis();
+        setCenterPoint(topLeft);
+        this.radius = topLeft.distanceToPoint(bottomRight) * 2;
         setyAxis(radius);
+        setxAxis(radius);
     }
 
     public double getRadius() {
@@ -15,12 +17,13 @@ public class Circle extends Ellipse {
     }
 
     @Override
-    public String toString() {
-        return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, radius);
+    public boolean pointBelongs(Point point) {
+        //Vemos si el punto pertenece al circulo
+        return (getCenterPoint().distanceToPoint(point))*2 < getRadius();
     }
 
     @Override
-    public boolean pointBelongs(Point p){
-        return true;
+    public String toString() {
+        return String.format("Círculo [Centro: %s, Radio: %.2f]", getCenterPoint(), radius);
     }
 }
