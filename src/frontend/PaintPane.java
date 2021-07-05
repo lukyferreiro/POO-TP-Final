@@ -1,64 +1,57 @@
 package frontend;
 
 import backend.CanvasState;
-import backend.model.*;
+import backend.model.Figure;
+import backend.model.Point;
+import backend.model.Rectangle;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ColorPicker;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import java.util.Collection;
-import java.util.LinkedList;
 
 public class PaintPane extends BorderPane {
 
 	// BackEnd
 	private final CanvasState canvasState;
 
+	//Colores por defecto
+	private final Color edgeColor = Color.BLACK;
+	private final Color fillColor = Color.YELLOW;
+
+	//Labels
+	private final Label edgeLabel = new Label("Borde");
+	private final Label fillLabel = new Label("Relleno");
+
 	// Canvas y relacionados
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-	private final Color edgeColor = Color.BLACK;
-	private final Color fillColor = Color.YELLOW;
-
 	// Botones Barra Izquierda
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	private final ToggleButton deleteButton = new ToggleButton("Borrar");
-	private final ToggleButton sendFrontButton = new ToggleButton("Al fondo");
-	private final ToggleButton sendBackButton = new ToggleButton("Al frente");
+	private final ToggleButton sendFrontButton = new ToggleButton("Al Fondo");
+	private final ToggleButton sendBackButton = new ToggleButton("Al Frente");
 
 	//Border slider
-	private final Slider slider = new Slider(1, 30, 1);
+	private final Slider edgeSlider = new Slider(1,50,0);
 
 	//Color Picker
 	private final ColorPicker edgeColorPicker = new ColorPicker(edgeColor);
 	private final ColorPicker fillColorPicker = new ColorPicker(fillColor);
 
-	//Labels
-	Label edgeLabel = new Label("Borde");
-	Label fillLabel = new Label("Relleno");
-
-	// Dibujar una figura
+	// Punto inicial para dibujar una figura
 	private Point startPoint;
 
-	// Seleccionar una figura
-	private final List<Figure> selectedFigures = new LinkedList<>();
+	// Coleccion con las figuras seleccionadas
+	private final Collection<Figure> selectedFigures = new LinkedList<>();
 
-	// StatusBar
+	// StatusBar.
 	private final StatusPane statusPane;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -84,113 +77,117 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().addAll(toolsList);
 
 		//Permito que se vea donde esta posicionado
-		slider.setShowTickMarks(true);
-		slider.setShowTickLabels(true);
+		edgeSlider.setShowTickMarks(true);
+		edgeSlider.setShowTickLabels(true);
 
 		//Agrego los labels, slider y colorPick
 		buttonsBox.getChildren().add(edgeLabel);
-		buttonsBox.getChildren().add(slider);
+		buttonsBox.getChildren().add(edgeSlider);
 		buttonsBox.getChildren().add(edgeColorPicker);
 		buttonsBox.getChildren().add(fillLabel);
 		buttonsBox.getChildren().add(fillColorPicker);
 
 		buttonsBox.setPadding(new Insets(5));
-		buttonsBox.setStyle("-fx-background-color: #999");
+		buttonsBox.setStyle("-fx-background-color: #999999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		canvas.setOnMousePressed(event -> {
-			startPoint = new Point(event.getX(), event.getY());
-		});
+		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
 
-		//....
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
-			StringBuilder label = new StringBuilder();
 			try {
-				Figure newFigure = FigureButton.findButton(startPoint, endPoint);
-				if(newFigure != null) {
-					newFigure.setEdgeWidth(slider.getValue());
+				selectedFigures.clear();
+				Figure newFigure = FigureButton.findButtons(startPoint, endPoint);
+				// Cuando se crea una figura por primera vez se la setea con lo valores por default:
+				// Ancho de borde: 1
+				// Color de borde: Negro
+				// Color de relleno: Amarillo
+				// Y se agrega la figura a la lista de figuras
+				if (newFigure != null) {
+					newFigure.setEdgeWidth(edgeSlider.getValue());
 					newFigure.setFillColor(fillColorPicker.getValue());
 					newFigure.setEdgeColor(edgeColorPicker.getValue());
-					canvasState.addFigure(newFigure);
+					canvasState.add(newFigure);
 				}
-				if(selectionButton.isSelected()) {
-					for (Figure figure : canvasState.figures()) {
-						if (figure.isEnclosedBy(startPoint, endPoint)) {
-							selectedFigures.add(figure);
-							label.append(figure.toString());
-							statusPane.updateStatus(label.toString());
-						}
-					}
-				}
-			} catch(IllegalArgumentException ex) {
-
+			} catch (Exception e){
+				statusPane.updateStatus(e.getMessage());
 			}
 			redrawCanvas();
-			selectedFigures.clear();
 		});
 
-		// Informacion relevante de la figura
+		// Evento de movimiento de mouse
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
+			for(Figure figure : canvasState) {
+				// Recorremos las figuras y nos fijamos si el punto donde se encuentra el mouse
+				// pertenece a alguna figura
 				if(figure.pointBelongs(eventPoint)) {
 					found = true;
 					label.append(figure.toString());
 				}
 			}
+			//Si estamos con el mouse sobre una figura retornamos sus datos
 			if(found) {
 				statusPane.updateStatus(label.toString());
-			} else {
+			}
+			//Sino, retornamos los datos del punto en el que nos hallamos
+			else {
 				statusPane.updateStatus(eventPoint.toString());
 			}
 		});
 
-		//
+		// Evento de seleccion
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				selectedFigures.clear();
-				//click en un punto sobre una figura
-				if(startPoint.compareTo(eventPoint) == 0) {
-					for(Figure figure : canvasState.figures()) {
-						if (figure.pointBelongs(eventPoint)) {
-							selectedFigures.add(figure);
+				//En caso de ser seleccion multiple
+				if( !startPoint.equals(eventPoint) ) {
+					try {
+						//Nos fijamos que figuras se encuentran dentro del rectangulo imaginario
+						Rectangle container = new Rectangle(startPoint, eventPoint);
+						for(Figure figure : canvasState) {
+							if(figure.isEnclosedBy(container)) {
+								selectedFigures.add(figure);
+							}
 						}
+					} catch(Exception e) {
+						statusPane.updateStatus(e.getMessage());
 					}
 				}
-				//hago un rectangulo imaginario
-				else{
-					for (Figure figure : canvasState.figures()) {
-						if(figure.isEnclosedBy(startPoint, eventPoint)) {
+				//Si estamos aca es que fue seleccion simple, solamente se hizo click
+				else {
+					for(Figure figure : canvasState) {
+						if(figure.pointBelongs(eventPoint)  ) {
+						//	selectedFigures.clear();
 							selectedFigures.add(figure);
 						}
 					}
 				}
 
-				StringBuilder label = new StringBuilder();
-				label.append("Se selecciono: ");
-
-				if (!selectedFigures.isEmpty()) {
+				StringBuilder label = new StringBuilder("Se seleccionó: ");
+				if ( !selectedFigures.isEmpty() ) {
 					for(Figure figure : selectedFigures){
-						label.append(figure.toString());
+						label.append(figure);
 					}
 					statusPane.updateStatus(label.toString());
 				}
+				else {
+					statusPane.updateStatus("Ninguna figura encontrada");
+				}
 				redrawCanvas();
-				selectedFigures.clear();
 			}
 		});
 
-		//
+		// Evento de mover las figuras que estan seleccionadas
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected() && !selectedFigures.isEmpty()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				double deltaX = (eventPoint.getX() - startPoint.getX());
-				double deltaY = (eventPoint.getY() - startPoint.getY());
+				double deltaX = eventPoint.getX() - startPoint.getX();
+				double deltaY = eventPoint.getY() - startPoint.getY();
 				startPoint = eventPoint;
 				for(Figure figure : selectedFigures){
 					figure.move(deltaX, deltaY);
@@ -210,7 +207,7 @@ public class PaintPane extends BorderPane {
 		//Lleva "Al Frente" todas las figuras seleccionadas
 		sendFrontButton.setOnAction(event -> {
 			canvasState.moveForward(selectedFigures);
-			sendFrontButton.setSelected(false);	//Decimos que el boton dejo de estar pulsado
+			sendFrontButton.setSelected(false);
 			redrawCanvas();
 		});
 
@@ -221,34 +218,28 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
+
 		//Se cambia el borde de las figuras
-		slider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				for (Figure figure : selectedFigures) {
-					figure.setEdgeWidth(slider.getValue());
-					redrawCanvas();
-				}
+		edgeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+			for (Figure figure : selectedFigures) {
+				figure.setEdgeWidth(edgeSlider.getValue());
+				redrawCanvas();
 			}
 		});
+
 		//Cambia el color del borde
-		edgeColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
-			@Override
-			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
-				for(Figure figure: selectedFigures){
-					figure.setEdgeColor(newValue);
-					redrawCanvas();
-				}
+		edgeColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+			for(Figure figure: selectedFigures){
+				figure.setEdgeColor(newValue);
+				redrawCanvas();
 			}
 		});
+
 		//Cambia el color del relleno
-		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
-			@Override
-			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
-				for(Figure figure : selectedFigures){
-					figure.setFillColor(newValue);
-					redrawCanvas();
-				}
+		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+			for(Figure figure : selectedFigures){
+				figure.setFillColor(newValue);
+				redrawCanvas();
 			}
 		});
 
@@ -256,18 +247,17 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
-	void redrawCanvas() {
+	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(Figure figure : canvasState.figures()) {
-			if (!selectedFigures.isEmpty()) {
-				if (selectedFigures.contains(figure))
-				figure.setEdgeColor(Color.RED);
+		for(Figure figure : canvasState) {
+			if(selectedFigures.contains(figure)) {
+				gc.setStroke(Color.RED);
+			} else {
+				gc.setStroke(figure.getEdgeColor());
 			}
-			gc.setFill(figure.getFillColor());
-			gc.setStroke(figure.getEdgeColor());
 			gc.setLineWidth(figure.getEdgeWidth());
+			gc.setFill(figure.getFillColor());
 			figure.draw(gc);
-
 		}
 	}
 }
