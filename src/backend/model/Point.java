@@ -2,9 +2,11 @@ package backend.model;
 
 import java.util.Objects;
 
-public class Point implements Movable, Comparable<Point> {
+import java.util.Objects;
 
-    public double x, y;
+public class Point implements Movable{
+
+    private double x, y;
 
     public Point(double x, double y) {
         this.x = x;
@@ -19,14 +21,24 @@ public class Point implements Movable, Comparable<Point> {
     }
 
     @Override
-    public void move(double deltaX, double deltaY){
-        this.x += deltaX;
-        this.y += deltaY;
+    public void move(double moveInX, double moveInY) {
+        this.x += moveInX;
+        this.y += moveInY;
     }
 
     // Distancia entre dos puntos
-    public double distanceTo(Point point) {
-        return Math.sqrt(Math.pow(this.x - point.getX(), 2) + Math.pow(this.y - point.getY(), 2));
+    public double distanceToPoint(Point p){
+        return Math.sqrt(Math.pow(p.getX() - x, 2) + Math.pow(p.getY() - y, 2));
+    }
+
+    // Distancia horizontal entre dos puntos
+    public double horizontalDistToPoint(Point p) {
+        return Math.abs(p.getX() - x);
+    }
+
+    // Distancia vertical entre dos puntos
+    public double verticalDistToPoint(Point p) {
+        return Math.abs(p.getY() - y);
     }
 
     @Override
@@ -34,13 +46,20 @@ public class Point implements Movable, Comparable<Point> {
         return String.format("{%.2f , %.2f}", x, y);
     }
 
-
     @Override
-    public int compareTo(Point o) {
-        int ans= Double.compare(x, o.getX());
-        if(ans == 0)
-           ans= Double.compare(y, o.getY());
-        return ans;
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
+        if( !(o instanceof Point point)){
+            return false;
+        }
+        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }
+

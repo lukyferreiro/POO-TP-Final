@@ -7,53 +7,52 @@ import java.util.ArrayList;
 
 public class Rectangle extends Figure {
 
-    protected final Point topLeft, bottomRight;
+    private final Point topLeft;
+    private final Point bottomRight;
 
-    public Rectangle(Point startPoint, Point endPoint) {
-        checkTopLeftBottomRight(startPoint, endPoint);
-        this.topLeft = startPoint;
-        this.bottomRight = endPoint;
-    }
-
-    public Point getTopLeft() {
-        return topLeft;
+    public Rectangle(Point topLeft, Point bottomRight) {
+        checkPoints(topLeft, bottomRight);
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
     }
 
     public Point getBottomRight() {
         return bottomRight;
     }
-
-    @Override
-    public boolean isEnclosedBy(Point tl, Point br) {
-        Rectangle rect = new Rectangle(tl, br);
-        return rect.pointBelongs(topLeft) && rect.pointBelongs(bottomRight);
+    public Point getTopLeft() {
+        return topLeft;
     }
 
     @Override
     public boolean pointBelongs(Point point) {
-        return point.getX() >= topLeft.getX() && point.getX() <= bottomRight.getX()
-                && point.getY() >= topLeft.getY() && point.getY() <= bottomRight.getY();
+        return point.getX() > topLeft.getX() && point.getY() > topLeft.getY() &&
+                point.getX() < bottomRight.getX() && point.getY() < bottomRight.getY();
     }
 
     @Override
-    public List<Point> getPoints() {
+    public boolean isEnclosedBy(Rectangle container) {
+        return container.pointBelongs(topLeft) && container.pointBelongs(bottomRight);
+    }
+
+    @Override
+    protected List<Point> getPoints() {
         List<Point> toReturn = new ArrayList<>();
-        toReturn.add(topLeft);
         toReturn.add(bottomRight);
+        toReturn.add(topLeft);
         return toReturn;
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.fillRect(topLeft.getX(), topLeft.getY(),
-                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
-
-        gc.strokeRect(topLeft.getX(), topLeft.getY(),
-                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+        double width = bottomRight.horizontalDistToPoint(topLeft);
+        double height = bottomRight.verticalDistToPoint(topLeft);
+        gc.strokeRect(topLeft.getX(), topLeft.getY(), width, height);
+        gc.fillRect(topLeft.getX(), topLeft.getY(), width, height);
     }
 
     @Override
     public String toString() {
-        return String.format("Rectangulo [ %s , %s ]", topLeft, bottomRight);
+        return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
+
 }

@@ -5,72 +5,74 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+public class Ellipse extends Figure {
 
-public class Ellipse extends Figure{
-
-    protected Point centerPoint;
-    public double xAxis, yAxis;
-    protected Point topLeft;
-    protected Point bottomRight;
+    private Point centerPoint;
+    private double xAxis;
+    private double yAxis;
 
     public Ellipse(Point topLeft, Point bottomRight) {
-        checkTopLeftBottomRight(topLeft, bottomRight);
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
-        this.xAxis = Math.abs(bottomRight.getX() - topLeft.getX());
-        this.yAxis = Math.abs(topLeft.getY() - bottomRight.getY());
-        this.centerPoint = new Point(topLeft.getX() + xAxis/2 , topLeft.getY() + yAxis/2 );
+        checkPoints(topLeft, bottomRight);
+        this.xAxis = topLeft.horizontalDistToPoint(bottomRight);
+        this.yAxis = topLeft.verticalDistToPoint(bottomRight);
+        this.centerPoint = new Point(topLeft.getX() + xAxis / 2, topLeft.getY() + yAxis / 2);
     }
 
-    public Point getCenterPoint() {
-        return centerPoint;
-    }
-    public double getxAxis() {
-        return xAxis;
-    }
-    public double getyAxis() {
-        return yAxis;
-    }
-
-    public void setxAxis(double xAxis) {
-        this.xAxis = xAxis;
+    public void setCenterPoint(Point centerPoint){
+        this.centerPoint = centerPoint;
     }
     public void setyAxis(double yAxis) {
         this.yAxis = yAxis;
     }
+    public void setxAxis(double xAxis) {
+        this.xAxis = xAxis;
+    }
 
+    public Point getCenterPoint(){
+        return centerPoint;
+    }
 
-    @Override
-    public boolean isEnclosedBy(Point tl, Point br) {
-        Rectangle rect = new Rectangle(tl, br);
-        return rect.pointBelongs(topLeft) && rect.pointBelongs(bottomRight);
+    // Metodo para calcular el Point topLeft del rectangulo que contiene a la elipse
+    private Point getTopLeft() {
+        return new Point(centerPoint.getX() - xAxis / 2,
+                centerPoint.getY() - yAxis / 2);
+    }
+
+    // Metodo para calcular el Point bottomRight del rectangulo que contiene a la elipse
+    private Point getBottomRight() {
+        return new Point(centerPoint.getX() + xAxis / 2,
+                centerPoint.getY() + yAxis / 2);
     }
 
     @Override
     public boolean pointBelongs(Point point) {
-        double h = centerPoint.getX();
-        double k = centerPoint.getY();
-        return ((Math.pow(point.getX() - h , 2)) / (Math.pow(xAxis, 2)) ) + (Math.pow( point.getY() - k, 2) / Math.pow(yAxis, 2)) <= 1;
+        double diffX = point.horizontalDistToPoint(centerPoint);
+        double diffY = point.verticalDistToPoint(centerPoint);
+        double a = xAxis / 2;
+        double b = yAxis / 2;
+        return ((Math.pow(diffX,2) / Math.pow(a,2)) + (Math.pow(diffY,2) / Math.pow(b,2))) <= 1;
     }
 
     @Override
-    public List<Point> getPoints() {
+    public boolean isEnclosedBy(Rectangle container) {
+        return container.pointBelongs(getTopLeft()) && container.pointBelongs(getBottomRight());
+    }
+
+    @Override
+    protected List<Point> getPoints() {
         List<Point> toReturn = new ArrayList<>();
         toReturn.add(centerPoint);
         return toReturn;
     }
 
-
     @Override
     public void draw(GraphicsContext gc) {
-        gc.fillOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
-        gc.strokeOval(topLeft.getX(), topLeft.getY(), xAxis, yAxis);
+        gc.strokeOval(getTopLeft().getX(), getTopLeft().getY(), xAxis, yAxis);
+        gc.fillOval(getTopLeft().getX(), getTopLeft().getY(), xAxis, yAxis);
     }
 
     @Override
     public String toString() {
-        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]",
-                centerPoint, xAxis, yAxis);
+        return String.format("Elipse [Centro: %s, Eje mayor: %.2f, Eje menor: %.2f]",centerPoint, xAxis, yAxis);
     }
 }
-

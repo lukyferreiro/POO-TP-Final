@@ -7,34 +7,31 @@ public enum FigureButton {
 
     RECTANGLE(new ToggleButton("Rectángulo")){
         @Override
-        public Figure getFigure(Point startPoint, Point endPoint) {
+        public Figure createFigure(Point startPoint, Point endPoint) {
             return new Rectangle(startPoint, endPoint);
         }
     },
     CIRCLE(new ToggleButton("Círculo")){
         @Override
-        public Figure getFigure(Point startPoint, Point endPoint) {
+        public Figure createFigure(Point startPoint, Point endPoint) {
             return new Circle(startPoint, endPoint);
         }
     },
     SQUARE(new ToggleButton("Cuadrado")){
         @Override
-        public Figure getFigure(Point startPoint, Point endPoint) {
+        public Figure createFigure(Point startPoint, Point endPoint) {
             return new Square(startPoint, endPoint);
         }
     },
     ELLIPSE(new ToggleButton("Elipse")){
         @Override
-        public Figure getFigure(Point startPoint, Point endPoint) {
-            if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-                throw new IllegalArgumentException("Formación de figura inválida");
-            }
+        public Figure createFigure(Point startPoint, Point endPoint) {
             return new Ellipse(startPoint, endPoint);
         }
     },
     LINE(new ToggleButton("Línea")){
         @Override
-        public Figure getFigure(Point startPoint, Point endPoint) {
+        public Figure createFigure(Point startPoint, Point endPoint) {
             return new Line(startPoint, endPoint);
         }
     };
@@ -49,16 +46,17 @@ public enum FigureButton {
         return button;
     }
 
-    public static Figure findButton(Point startPoint, Point endPoint){
+    // Metodo para buscar el boton de la Figure y devuelve una instancia de dicha Figure
+    public static Figure findButtons(Point startPoint, Point endPoint){
         for (FigureButton b : values()) {
             if(b.button.isSelected()){
-                return b.getFigure(startPoint,endPoint);
+                return b.createFigure(startPoint, endPoint);
             }
         }
         return null;
     }
 
-    public abstract Figure getFigure(Point startPoint, Point endPoint);
+    // Metodo abstracto que sobreescribe cada enum para devulver su respectiva instancia
+    public abstract Figure createFigure(Point startPoint, Point endPoint);
 
 }
-
