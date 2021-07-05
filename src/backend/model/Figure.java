@@ -26,14 +26,13 @@ public abstract class Figure implements Movable, Colorable, Drawable{
     public double getEdgeWidth() {
         return edgeWidth;
     }
-
-    public void setEdgeWidth(double strokeWidth) {
-        this.edgeWidth = strokeWidth;
+    public void setEdgeWidth(double edgeWidth) {
+        this.edgeWidth = edgeWidth;
     }
 
     @Override
-    public void setEdgeColor(Color strokeColor) {
-        this.edgeColor = strokeColor;
+    public void setEdgeColor(Color edgeColor) {
+        this.edgeColor = edgeColor;
     }
     @Override
     public void setFillColor(Color fillColor) {
