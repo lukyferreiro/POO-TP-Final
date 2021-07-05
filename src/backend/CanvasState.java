@@ -2,26 +2,14 @@ package backend;
 
 import backend.model.Figure;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-public class CanvasState {
-
-    private final LinkedList<Figure> canvasFigures = new LinkedList<>();
-
-    public void addFigure(Figure figure) {
-        canvasFigures.add(figure);
-    }
-
-    // Metodo para retornar iterar por las Figures
-    public Iterable<Figure> figures() {
-        return canvasFigures;
-    }
+public class CanvasState extends LinkedList<Figure>{
 
     // Metodo para remover las figuras seleccionadas
     public void removeFigures(Collection<Figure> selectedFigures){
         for(Figure figure : selectedFigures){
-            canvasFigures.remove(figure);
+            this.remove(figure);
         }
     }
 
@@ -29,12 +17,14 @@ public class CanvasState {
     public void moveForward(Collection<Figure> selectedFigures) {
         removeFigures(selectedFigures);
         LinkedList<Figure> aux = new LinkedList<>(selectedFigures);
-        aux.descendingIterator().forEachRemaining(canvasFigures::addFirst);
+        aux.descendingIterator().forEachRemaining(this::addFirst);
     }
 
     // Metodo para mover a la figuras hacia atras (utilizando el orden de aparicion)
     public void moveBackwards(Collection<Figure> selectedFigures) {
         removeFigures(selectedFigures);
-        selectedFigures.forEach(canvasFigures::addLast);
+        for(Figure figure : selectedFigures){
+            this.addLast(figure);
+        }
     }
 }
